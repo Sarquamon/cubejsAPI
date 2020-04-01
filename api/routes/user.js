@@ -1,8 +1,6 @@
 const express = require("express");
 const router = express.Router();
 
-const stateKey = "spotify_auth_state";
-
 router.get("/", (req, res, next) => {
   console.log(redirect_uri);
   console.log(client_id);
@@ -13,7 +11,15 @@ router.get("/", (req, res, next) => {
 });
 
 router.get("/login", (req, res, next) => {
-  //   res.send("H1 from user login");
+  console.log("Hello from /login");
+
+  res.status(200).json({ message: "Hello from /login" });
+});
+
+router.post("/register", (req, res, next) => {
+  console.log("Hello from /register");
+
+  res.status(200).json({ message: "Hello from /register" });
 });
 
 module.exports = router;

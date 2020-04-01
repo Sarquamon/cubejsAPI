@@ -4,20 +4,27 @@ const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
 const CORS = require("cors");
 require("dotenv").config();
+const conn = require("./config/sqlconn");
 
 const app = express();
 
-const indexRoute = require("./api/routes/index");
-const userRoute = require("./api/routes/user");
-const spotifyRoute = require("./api/routes/spotify");
-
+app.use(CORS()); //CORS
 app.use(morgan("dev"));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(cookieParser());
 
-//CORS
-app.use(CORS());
+conn
+  .authenticate()
+  .then(() => console.log(`Succesful db connection`))
+  .catch(err => {
+    console.log(`Error on db connection: \n${err}`);
+  });
+
+//routes
+const indexRoute = require("./api/routes/index");
+const userRoute = require("./api/routes/user");
+const spotifyRoute = require("./api/routes/spotify");
 
 app.use("/", indexRoute);
 app.use("/user", userRoute);
