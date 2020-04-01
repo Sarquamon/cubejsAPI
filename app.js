@@ -9,6 +9,7 @@ const app = express();
 
 const indexRoute = require("./api/routes/index");
 const userRoute = require("./api/routes/user");
+const spotifyRoute = require("./api/routes/spotify");
 
 app.use(morgan("dev"));
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -20,6 +21,7 @@ app.use(CORS());
 
 app.use("/", indexRoute);
 app.use("/user", userRoute);
+app.use("/spotify", spotifyRoute);
 
 //Error handling
 app.use((req, res, next) => {
