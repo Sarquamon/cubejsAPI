@@ -1,33 +1,34 @@
 const express = require("express");
 const morgan = require("morgan");
 const bodyParser = require("body-parser");
+const cookieParser = require("cookie-parser");
+const CORS = require("cors");
 require("dotenv").config();
+const conn = require("./config/sqlconn");
 
 const app = express();
 
-const indexRoute = require("./api/routes/index");
-const userRoute = require("./api/routes/user");
-
+app.use(CORS()); //CORS
 app.use(morgan("dev"));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
+app.use(cookieParser());
 
-//CORS
-app.use((req, res, next) => {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header(
-    "Access-Control-Allow-Headers",
-    "Origin, X-Requested-With, Content-Type, Accept, Authorization"
-  );
-  if (req.method === "OPTIONS") {
-    res.header("Access-Control-Allow-Methods", "PUT, POST, PATCH, DELETE, GET");
-    return res.status(200).json({});
-  }
-  next();
-});
+conn
+  .authenticate()
+  .then(() => console.log(`Succesful db connection`))
+  .catch(err => {
+    console.log(`Error on db connection: \n${err}`);
+  });
+
+//routes
+const indexRoute = require("./api/routes/index");
+const userRoute = require("./api/routes/user");
+const spotifyRoute = require("./api/routes/spotify");
 
 app.use("/", indexRoute);
 app.use("/user", userRoute);
+app.use("/spotify", spotifyRoute);
 
 //Error handling
 app.use((req, res, next) => {
