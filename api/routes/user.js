@@ -49,10 +49,10 @@ router.post("/login", (req, res, next) => {
                 Data: data
               });
             } else {
-              console.log(`Error 4! ${response}`);
+              // console.log(`Error! ${response}`);
               return res
-                .status(404)
-                .json({ Message: "Error 4!", Details: "Auth Failed" });
+                .status(401)
+                .json({ Message: "Error!", Details: "Auth Failed" });
             }
           } else {
             console.log(`Error 3! \n${err}`);
