@@ -86,4 +86,25 @@ router.get("/refreshToken", (req, res, next) => {
     });
 });
 
+router.get("/getUserName", (req, res, next) => {
+  console.log("Hello from getusername");
+
+  spotiAPI
+    .getMe()
+    .then(result => {
+      console.log(`Success! ${result}`);
+      res.status(200).json({
+        Message: "Success!",
+        Details: result.body
+      });
+    })
+    .catch(err => {
+      console.log(`Error! ${err}`);
+      res.status(500).json({
+        Message: "Error!",
+        Details: err
+      });
+    });
+});
+
 module.exports = router;
