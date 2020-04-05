@@ -29,7 +29,7 @@ router.get("/spotifyLinkGenerator", (req, res, next) => {
   console.log("Hello from spotify link generator");
 
   const authURL = spotiAPI.createAuthorizeURL(
-    ["user-library-read"],
+    ["user-library-read", "user-top-read"],
     randomString(16)
   );
   console.log(authURL);
@@ -43,7 +43,7 @@ router.get("/spotifyLinkGenerator", (req, res, next) => {
 });
 
 router.get("/generateToken", (req, res, next) => {
-  console.log("generateToken");
+  console.log("hello from generateToken");
 
   const { code } = req.query;
   spotiAPI
@@ -70,13 +70,15 @@ router.get("/generateToken", (req, res, next) => {
 });
 
 router.get("/refreshToken", (req, res, next) => {
+  console.log("hello from refreshtoken");
+
   spotiAPI
     .refreshAccessToken()
     .then(result => {
       console.log("The token has been refreshed!");
-      console.log(result);
+      //   console.log(result);
 
-      spotifyApi.setAccessToken(result.body["access_token"]);
+      spotiAPI.setAccessToken(result.body["access_token"]);
     })
     .catch(err => {
       console.log(err);
@@ -102,6 +104,81 @@ router.get("/getUserName", (req, res, next) => {
     })
     .catch(err => {
       console.log(`Error! ${err}`);
+      res.status(500).json({
+        Message: "Error!",
+        Details: err
+      });
+    });
+});
+
+router.get("/getRecommendedGenres", (req, res, next) => {
+  console.log("Hello from recommendedGenres");
+
+  spotiAPI
+    .getAvailableGenreSeeds()
+    .then(result => {
+      console.log("Success");
+
+      console.log(result);
+      res.status(200).json({
+        Message: "Success!",
+        Details: result.body.genres
+      });
+    })
+    .catch(err => {
+      console.log("Error!");
+      console.log(err);
+      res.status(500).json({
+        Message: "Error!",
+        Details: err
+      });
+    });
+});
+
+router.get("/getUsersTopArtists", (req, res, next) => {
+  console.log("Hello from get usersTopArtists");
+  spotiAPI
+    .getMyTopArtists({ time_range: "long_term" })
+    .then(result => {
+      console.log("Success!");
+      console.log(result.body);
+
+      res.status(200).json({
+        Message: "Success!",
+        Details: result.body
+      });
+    })
+    .catch(err => {
+      console.log("Error!");
+      console.log(err);
+      res.status(500).json({
+        Message: "Error!",
+        Details: err
+      });
+    });
+});
+
+router.get("/getSpotifyRecommendations", (req, res, next) => {
+  console.log("Hello from getSpotifyReco");
+  spotiAPI
+    .getRecommendations({
+      min_energy: 0.4,
+      seed_artists: ["6mfK6Q2tzLMEchAr0e9Uzu", "4DYFVNKZ1uixa6SQTvzQwJ"],
+      min_popularity: 50
+    })
+    .then(result => {
+      console.log("Success!");
+      console.log(result);
+
+      res.status(200).json({
+        Message: "Success!",
+        Details: result
+      });
+    })
+    .catch(err => {
+      console.log("Error!");
+      console.log(err);
+
       res.status(500).json({
         Message: "Error!",
         Details: err
