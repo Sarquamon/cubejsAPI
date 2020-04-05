@@ -25,7 +25,6 @@ conn
 const indexRoute = require("./api/routes/index");
 const userRoute = require("./api/routes/user");
 const spotifyRoute = require("./api/routes/spotiWrapper");
-// const spotifyRoute = require("./api/routes/spotify");
 
 app.use("/", indexRoute);
 app.use("/user", userRoute);

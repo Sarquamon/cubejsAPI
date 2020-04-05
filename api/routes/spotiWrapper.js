@@ -26,6 +26,8 @@ router.get("/", (req, res, next) => {
 });
 
 router.get("/spotifyLinkGenerator", (req, res, next) => {
+  console.log("Hello from spotify link generator");
+
   const authURL = spotiAPI.createAuthorizeURL(
     ["user-library-read"],
     randomString(16)
