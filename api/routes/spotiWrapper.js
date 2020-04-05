@@ -40,8 +40,50 @@ router.get("/spotifyLinkGenerator", (req, res, next) => {
   }
 });
 
-router.get("/generateToken/:code", (req, res, next) => {});
+router.get("/generateToken", (req, res, next) => {
+  console.log("generateToken");
 
-router.get("/refreshToken", (req, res, next) => {});
+  const { code } = req.query;
+  spotiAPI
+    .authorizationCodeGrant(code)
+    .then(result => {
+      console.log({ Message: "Success!", code: code, result: result });
+
+      spotiAPI.setAccessToken(result.body["access_token"]);
+      spotiAPI.setRefreshToken(result.body["refresh_token"]);
+
+      console.log("redirecting");
+
+      res.redirect("http://localhost:3000/tests");
+    })
+    .catch(err => {
+      console.log(`Error!`);
+      console.log(err);
+
+      res.status(500).json({
+        Message: "Error!",
+        Details: err
+      });
+    });
+});
+
+router.get("/refreshToken", (req, res, next) => {
+  spotiAPI
+    .refreshAccessToken()
+    .then(result => {
+      console.log("The token has been refreshed!");
+      console.log(result);
+
+      spotifyApi.setAccessToken(result.body["access_token"]);
+    })
+    .catch(err => {
+      console.log(err);
+
+      res.status(500).json({
+        Message: "Error!",
+        Details: err
+      });
+    });
+});
 
 module.exports = router;
