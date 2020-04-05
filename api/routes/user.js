@@ -6,16 +6,12 @@ const jwt = require("jsonwebtoken");
 const router = express.Router();
 
 router.get("/", (req, res, next) => {
-  console.log(redirect_uri);
-  console.log(client_id);
-  console.log(client_secret);
-
   res.send("H1 from user Root");
   console.log("Hi from user root!");
 });
 
-router.get("/login", (req, res, next) => {
-  console.log("Hello from /login");
+router.post("/login", (req, res, next) => {
+  // console.log("Hello from /login");
 
   const { user__name, user__email, user__pwd } = req.body;
 
@@ -27,7 +23,6 @@ router.get("/login", (req, res, next) => {
   })
     .then(result => {
       if (result) {
-        // res.status(200).json({ result: result });
         bcrypt.compare(user__pwd, result.USER__PWD, (err, response) => {
           if (!err) {
             if (response) {
@@ -44,31 +39,31 @@ router.get("/login", (req, res, next) => {
               );
               const data = {
                 USER__NAME: result.USER__NAME,
-                USER__EMAIL: result.USER__EMAIL
+                USER__EMAIL: result.USER__EMAIL,
+                token: token
               };
               console.log(`Success! ${data}`);
               return res.status(200).json({
                 Message: "Success!",
                 Details: `Logged in as ${user__name}`,
-                Data: data,
-                token: token
+                Data: data
               });
             } else {
-              console.log(`Error! ${response}`);
+              // console.log(`Error! ${response}`);
               return res
                 .status(401)
                 .json({ Message: "Error!", Details: "Auth Failed" });
             }
           } else {
-            console.log(`Error! \n${err}`);
+            console.log(`Error 3! \n${err}`);
 
             return res
               .status(401)
-              .json({ Message: "Error!", Details: "Auth Failed" });
+              .json({ Message: "Error 3!", Details: "Auth Failed" });
           }
         });
       } else {
-        console.log(`Error! ${result}`);
+        console.log(`Error! User ${user__name} was not found`);
         res.status(404).json({
           Message: "Error!",
           Details: `User ${user__name} not found`,
@@ -83,7 +78,7 @@ router.get("/login", (req, res, next) => {
 });
 
 router.post("/register", (req, res, next) => {
-  console.log("Hello from /register");
+  // console.log("Hello from /register");
 
   const {
     user__name,
