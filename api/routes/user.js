@@ -18,10 +18,10 @@ router.post("/login", (req, res, next) => {
   User.findOne({
     attributes: ["USER__ID", "USER__NAME", "USER__EMAIL", "USER__PWD"],
     where: {
-      [Op.or]: [{ USER__NAME: user__name }, { USER__EMAIL: user__email }]
-    }
+      [Op.or]: [{ USER__NAME: user__name }, { USER__EMAIL: user__email }],
+    },
   })
-    .then(result => {
+    .then((result) => {
       if (result) {
         bcrypt.compare(user__pwd, result.USER__PWD, (err, response) => {
           if (!err) {
@@ -30,23 +30,24 @@ router.post("/login", (req, res, next) => {
                 {
                   USER__NAME: result.USER__NAME,
                   USER__EMAIL: result.USER__EMAIL,
-                  USER__ID: result.USER__ID
+                  USER__ID: result.USER__ID,
                 },
                 process.env.JWT_KEY,
                 {
-                  expiresIn: "200h"
+                  expiresIn: "200h",
                 }
               );
               const data = {
+                USER__ID: result.USER__ID,
                 USER__NAME: result.USER__NAME,
                 USER__EMAIL: result.USER__EMAIL,
-                token: token
+                token: token,
               };
               console.log(`Success! ${data}`);
               return res.status(200).json({
                 Message: "Success!",
                 Details: `Logged in as ${user__name}`,
-                Data: data
+                Data: data,
               });
             } else {
               // console.log(`Error! ${response}`);
@@ -67,11 +68,11 @@ router.post("/login", (req, res, next) => {
         res.status(404).json({
           Message: "Error!",
           Details: `User ${user__name} not found`,
-          Data: result
+          Data: result,
         });
       }
     })
-    .catch(err => {
+    .catch((err) => {
       console.log(`Error! ${err}`);
       res.status(500).json({ Message: "Error!", Details: err });
     });
@@ -85,16 +86,16 @@ router.post("/register", (req, res, next) => {
     user__email,
     user__pwd,
     user__first_name,
-    user__last_name
+    user__last_name,
   } = req.body;
 
   User.findOne({
     attributes: ["USER__NAME", "USER__EMAIL"],
     where: {
-      [Op.or]: [{ USER__NAME: user__name }, { USER__EMAIL: user__email }]
-    }
+      [Op.or]: [{ USER__NAME: user__name }, { USER__EMAIL: user__email }],
+    },
   })
-    .then(user => {
+    .then((user) => {
       if (!user) {
         bcrypt.hash(user__pwd, 10, (err, hashed) => {
           if (!err) {
@@ -103,20 +104,20 @@ router.post("/register", (req, res, next) => {
               USER__EMAIL: user__email,
               USER__PWD: hashed,
               USER__FIRST_NAME: user__first_name,
-              USER__LAST_NAME: user__last_name
+              USER__LAST_NAME: user__last_name,
             })
-              .then(result => {
+              .then((result) => {
                 const data = {
                   USER__NAME: result.dataValues.USER__NAME,
-                  USER__EMAIL: result.dataValues.USER__EMAIL
+                  USER__EMAIL: result.dataValues.USER__EMAIL,
                 };
                 console.log(`Success! \n${data}`);
                 res.status(201).json({
                   Message: `Success! user ${user__name} created!`,
-                  Data: data
+                  Data: data,
                 });
               })
-              .catch(err => {
+              .catch((err) => {
                 console.log(`Error 5! ${err}`);
                 res.status(500).json({ Message: "Error 5!", Error: err });
               });
@@ -132,11 +133,11 @@ router.post("/register", (req, res, next) => {
           `Error 1! user ${user__name} or email ${user__email} already exists!`
         );
         res.status(409).json({
-          Message: `Error 1! user ${user__name} or email ${user__email} already exists!`
+          Message: `Error 1! user ${user__name} or email ${user__email} already exists!`,
         });
       }
     })
-    .catch(err => {
+    .catch((err) => {
       console.log(`Error 2! ${err}`);
       res.status(500).json({ Message: "Error 2!", Error: err });
     });
