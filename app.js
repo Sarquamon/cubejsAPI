@@ -17,14 +17,14 @@ app.use(cookieParser());
 conn
   .authenticate()
   .then(() => console.log(`Succesful db connection`))
-  .catch(err => {
+  .catch((err) => {
     console.log(`Error on db connection: \n${err}`);
   });
 
 //routes
 const indexRoute = require("./api/routes/index");
 const userRoute = require("./api/routes/user");
-const spotifyRoute = require("./api/routes/spotiWrapper");
+const spotifyRoute = require("./api/routes/spotify");
 
 app.use("/", indexRoute);
 app.use("/user", userRoute);
@@ -41,8 +41,8 @@ app.use((error, req, res, next) => {
   res.status(error.status || 500);
   res.json({
     error: {
-      message: error.message
-    }
+      message: error.message,
+    },
   });
 });
 

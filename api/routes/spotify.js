@@ -1,5 +1,6 @@
 const express = require("express");
 const spotifyWebAPI = require("spotify-web-api-node");
+const spotifyController = require("../controllers/spotifyController");
 const User = require("../../models/Users");
 const Artist = require("../../models/Artists");
 const userArtist = require("../../models/userArtistRelations");
@@ -12,109 +13,15 @@ const spotiAPI = new spotifyWebAPI({
   redirectUri: process.env.SPOTIFY_REDIRECT_URI,
 });
 
-const randomString = (length) => {
-  var result = "";
-  const characters =
-    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-  const charactersLength = characters.length;
-  for (let i = 0; i < length; i++) {
-    result += characters.charAt(Math.floor(Math.random() * charactersLength));
-  }
-  return result;
-};
+router.get("/", spotifyController.spotifyRoot);
 
-router.get("/", (req, res, next) => {
-  console.log("Hello from root spotify");
-  res.status(200).json({ Message: "Hello from root spotify" });
-  next();
-});
+router.get("/spotifyLinkGenerator", spotifyController.spotifyLinkGenerator);
 
-router.get("/spotifyLinkGenerator", (req, res, next) => {
-  console.log("Hello from spotify link generator");
+router.get("/generateToken", spotifyController.spotifyTokenGenerator);
 
-  const authURL = spotiAPI.createAuthorizeURL(
-    ["user-library-read", "user-top-read"],
-    randomString(16)
-  );
-  console.log(authURL);
-  if (authURL) {
-    res.status(200).json({ Message: `Link generated!`, authURL: authURL });
-  } else {
-    res
-      .status(500)
-      .json({ Message: `Error!`, Details: "Unable to generate link" });
-  }
-});
+router.get("/refreshToken", spotifyController.tokenRefresher);
 
-router.get("/generateToken", (req, res, next) => {
-  console.log("hello from generateToken");
-
-  const { code } = req.query;
-  spotiAPI
-    .authorizationCodeGrant(code)
-    .then((result) => {
-      console.log({ Message: "Success!", code: code, result: result });
-
-      spotiAPI.setAccessToken(result.body["access_token"]);
-      spotiAPI.setRefreshToken(result.body["refresh_token"]);
-
-      console.log("redirecting");
-
-      res.redirect("http://localhost:3000/tests");
-    })
-    .catch((err) => {
-      console.log(`Error!`);
-      console.log(err);
-
-      res.status(500).json({
-        Message: "Error!",
-        Details: err,
-      });
-    });
-});
-
-router.get("/refreshToken", (req, res, next) => {
-  console.log("hello from refreshtoken");
-
-  spotiAPI
-    .refreshAccessToken()
-    .then((result) => {
-      console.log("The token has been refreshed!");
-      //   console.log(result);
-
-      spotiAPI.setAccessToken(result.body["access_token"]);
-    })
-    .catch((err) => {
-      console.log(err);
-
-      res.status(500).json({
-        Message: "Error!",
-        Details: err,
-      });
-    });
-});
-
-router.get("/getUserName", (req, res, next) => {
-  console.log("Hello from getusername");
-
-  spotiAPI
-    .getMe()
-    .then((result) => {
-      // console.log("Success!\n", result);
-
-      res.status(200).json({
-        Message: "Success!",
-        Details: result.body,
-      });
-    })
-    .catch((err) => {
-      console.log(`Error! ${err}`);
-      res.status(500).json({
-        Message: "Error!",
-        Details: err,
-      });
-    });
-});
+router.get("/getUserName", spotifyController.getUserName);
 
 router.get("/getRecommendedGenres", (req, res, next) => {
   console.log("Hello from recommendedGenres");
