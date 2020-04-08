@@ -1,10 +1,7 @@
 const express = require("express");
+const indexController = require("../controllers/indexController");
 const router = express.Router();
 
-router.get("/", (req, res, next) => {
-  res.send("Hi from index root!");
-  console.log("Hi from index root!");
-  // next();
-});
+router.get("/", indexController.indexRoot);
 
 module.exports = router;
