@@ -1,5 +1,5 @@
 const User = require("../../models/Users");
-const { Op } = require("sequelize");
+const UserFunctions = require("./userFunctions");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
@@ -13,12 +13,7 @@ exports.userLogin = (req, res, next) => {
 
   const { USERNAME, USEREMAIL, USERPWD } = req.body;
 
-  User.findOne({
-    attributes: ["ID_USER", "USERNAME", "USEREMAIL", "USERPWD"],
-    where: {
-      [Op.or]: [{ USERNAME: USERNAME }, { USEREMAIL: USEREMAIL }],
-    },
-  })
+  UserFunctions.findOneUser(USERNAME, USEREMAIL)
     .then((result) => {
       if (result) {
         bcrypt.compare(USERPWD, result.USERPWD, (err, response) => {
@@ -41,7 +36,7 @@ exports.userLogin = (req, res, next) => {
                 USEREMAIL: result.USEREMAIL,
                 token: token,
               };
-              console.log("Success!\n", data);
+              // console.log("Success!\n", data);
               return res.status(200).json({
                 Message: "Success!",
                 Details: `Logged in as ${USERNAME}`,
@@ -81,12 +76,7 @@ exports.userRegister = (req, res, next) => {
 
   const { USERNAME, USEREMAIL, USERPWD, FIRST_NAME, LAST_NAME } = req.body;
 
-  User.findOne({
-    attributes: ["USERNAME", "USEREMAIL"],
-    where: {
-      [Op.or]: [{ USERNAME: USERNAME }, { USEREMAIL: USEREMAIL }],
-    },
-  })
+  UserFunctions.findOneUser(USERNAME, USEREMAIL)
     .then((user) => {
       if (!user) {
         bcrypt.hash(USERPWD, 10, (err, hashed) => {
@@ -103,18 +93,18 @@ exports.userRegister = (req, res, next) => {
                   USERNAME: result.dataValues.USERNAME,
                   USEREMAIL: result.dataValues.USEREMAIL,
                 };
-                console.log("Success!\n", data);
+                // console.log("Success!\n", data);
                 res.status(201).json({
                   Message: `Success! user ${USERNAME} created!`,
                   Data: data,
                 });
               })
               .catch((err) => {
-                console.log(`Error 5! ${err}`);
+                console.log("Error 5!\n", err);
                 res.status(500).json({ Message: "Error 5!", Error: err });
               });
           } else {
-            console.log(`Error! Failed hashing \n${err}`);
+            console.log("Error! Failed hashing\n", err);
             res
               .status(500)
               .json({ Message: "Error! Failed Hashing", Details: err });
@@ -130,7 +120,7 @@ exports.userRegister = (req, res, next) => {
       }
     })
     .catch((err) => {
-      console.log(`Error 2! ${err}`);
+      console.log("Error 2!\n", err);
       res.status(500).json({ Message: "Error 2!", Error: err });
     });
 };
