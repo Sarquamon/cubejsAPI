@@ -4,7 +4,7 @@ const Users = require("./Users");
 const Artists = require("./Artists");
 
 const userArtistRel = conn.define(
-  "T_ARTISTS_USER",
+  "T_USER_ARTISTS",
   {
     ID_ARTIST_USER: {
       type: Sequelize.INTEGER,
@@ -16,7 +16,7 @@ const userArtistRel = conn.define(
       type: Sequelize.INTEGER,
       references: {
         model: Users,
-        key: "USER__ID",
+        key: "ID_USER",
       },
     },
     ID_ARTIST: {

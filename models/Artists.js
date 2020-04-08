@@ -15,6 +15,10 @@ const Artist = conn.define(
       unique: true,
       allowNull: false,
     },
+    CREATED_AT: {
+      type: Sequelize.STRING(19),
+      allowNull: true,
+    },
   },
   { timestamps: false, freezeTableName: true }
 );

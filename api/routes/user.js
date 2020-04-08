@@ -13,24 +13,24 @@ router.get("/", (req, res, next) => {
 router.post("/login", (req, res, next) => {
   // console.log("Hello from /login");
 
-  const { user__name, user__email, user__pwd } = req.body;
+  const { USERNAME, USEREMAIL, USERPWD } = req.body;
 
   User.findOne({
-    attributes: ["USER__ID", "USER__NAME", "USER__EMAIL", "USER__PWD"],
+    attributes: ["ID_USER", "USERNAME", "USEREMAIL", "USERPWD"],
     where: {
-      [Op.or]: [{ USER__NAME: user__name }, { USER__EMAIL: user__email }],
+      [Op.or]: [{ USERNAME: USERNAME }, { USEREMAIL: USEREMAIL }],
     },
   })
     .then((result) => {
       if (result) {
-        bcrypt.compare(user__pwd, result.USER__PWD, (err, response) => {
+        bcrypt.compare(USERPWD, result.USERPWD, (err, response) => {
           if (!err) {
             if (response) {
               const token = jwt.sign(
                 {
-                  USER__NAME: result.USER__NAME,
-                  USER__EMAIL: result.USER__EMAIL,
-                  USER__ID: result.USER__ID,
+                  USERNAME: result.USERNAME,
+                  USEREMAIL: result.USEREMAIL,
+                  ID_USER: result.ID_USER,
                 },
                 process.env.JWT_KEY,
                 {
@@ -38,15 +38,15 @@ router.post("/login", (req, res, next) => {
                 }
               );
               const data = {
-                USER__ID: result.USER__ID,
-                USER__NAME: result.USER__NAME,
-                USER__EMAIL: result.USER__EMAIL,
+                ID_USER: result.ID_USER,
+                USERNAME: result.USERNAME,
+                USEREMAIL: result.USEREMAIL,
                 token: token,
               };
-              console.log(`Success! ${data}`);
+              console.log("Success!\n", data);
               return res.status(200).json({
                 Message: "Success!",
-                Details: `Logged in as ${user__name}`,
+                Details: `Logged in as ${USERNAME}`,
                 Data: data,
               });
             } else {
@@ -64,10 +64,10 @@ router.post("/login", (req, res, next) => {
           }
         });
       } else {
-        console.log(`Error! User ${user__name} was not found`);
+        console.log(`Error! User ${USERNAME} was not found`);
         res.status(404).json({
           Message: "Error!",
-          Details: `User ${user__name} not found`,
+          Details: `User ${USERNAME} not found`,
           Data: result,
         });
       }
@@ -81,39 +81,33 @@ router.post("/login", (req, res, next) => {
 router.post("/register", (req, res, next) => {
   // console.log("Hello from /register");
 
-  const {
-    user__name,
-    user__email,
-    user__pwd,
-    user__first_name,
-    user__last_name,
-  } = req.body;
+  const { USERNAME, USEREMAIL, USERPWD, FIRST_NAME, LAST_NAME } = req.body;
 
   User.findOne({
-    attributes: ["USER__NAME", "USER__EMAIL"],
+    attributes: ["USERNAME", "USEREMAIL"],
     where: {
-      [Op.or]: [{ USER__NAME: user__name }, { USER__EMAIL: user__email }],
+      [Op.or]: [{ USERNAME: USERNAME }, { USEREMAIL: USEREMAIL }],
     },
   })
     .then((user) => {
       if (!user) {
-        bcrypt.hash(user__pwd, 10, (err, hashed) => {
+        bcrypt.hash(USERPWD, 10, (err, hashed) => {
           if (!err) {
             User.create({
-              USER__NAME: user__name,
-              USER__EMAIL: user__email,
-              USER__PWD: hashed,
-              USER__FIRST_NAME: user__first_name,
-              USER__LAST_NAME: user__last_name,
+              USERNAME: USERNAME,
+              USEREMAIL: USEREMAIL,
+              USERPWD: hashed,
+              FIRST_NAME: FIRST_NAME,
+              LAST_NAME: LAST_NAME,
             })
               .then((result) => {
                 const data = {
-                  USER__NAME: result.dataValues.USER__NAME,
-                  USER__EMAIL: result.dataValues.USER__EMAIL,
+                  USERNAME: result.dataValues.USERNAME,
+                  USEREMAIL: result.dataValues.USEREMAIL,
                 };
-                console.log(`Success! \n${data}`);
+                console.log("Success!\n", data);
                 res.status(201).json({
-                  Message: `Success! user ${user__name} created!`,
+                  Message: `Success! user ${USERNAME} created!`,
                   Data: data,
                 });
               })
@@ -130,10 +124,10 @@ router.post("/register", (req, res, next) => {
         });
       } else {
         console.log(
-          `Error 1! user ${user__name} or email ${user__email} already exists!`
+          `Error 1! user ${USERNAME} or email ${USEREMAIL} already exists!`
         );
         res.status(409).json({
-          Message: `Error 1! user ${user__name} or email ${user__email} already exists!`,
+          Message: `Error 1! user ${USERNAME} or email ${USEREMAIL} already exists!`,
         });
       }
     })

@@ -2,7 +2,7 @@ const express = require("express");
 const spotifyWebAPI = require("spotify-web-api-node");
 const User = require("../../models/Users");
 const Artist = require("../../models/Artists");
-const userArtist = require("../../models/userArtistRel");
+const userArtist = require("../../models/userArtistRelations");
 const { Op } = require("sequelize");
 const router = express.Router();
 
@@ -100,7 +100,8 @@ router.get("/getUserName", (req, res, next) => {
   spotiAPI
     .getMe()
     .then((result) => {
-      console.log(`Success! ${result}`);
+      // console.log("Success!\n", result);
+
       res.status(200).json({
         Message: "Success!",
         Details: result.body,
@@ -121,9 +122,8 @@ router.get("/getRecommendedGenres", (req, res, next) => {
   spotiAPI
     .getAvailableGenreSeeds()
     .then((result) => {
-      console.log("Success");
+      // console.log("Success\n", result);
 
-      console.log(result);
       res.status(200).json({
         Message: "Success!",
         Details: result.body.genres,
@@ -264,26 +264,90 @@ router.get("/getUsersTopArtists/:userId", async (req, res, next) => {
     });
 });
 
-router.get("/getSpotifyRecommendations", (req, res, next) => {
-  console.log("Hello from getSpotifyReco");
-  spotiAPI
-    .getRecommendations({
-      min_energy: 0.4,
-      seed_artists: ["6mfK6Q2tzLMEchAr0e9Uzu", "4DYFVNKZ1uixa6SQTvzQwJ"],
-      min_popularity: 50,
+const storeRecommendedArtists = (tracks) => {};
+
+router.get("/getSpotifyRecommendations/:userId", (req, res, next) => {
+  // console.log("Hello from getSpotifyReco");
+
+  const { userId } = req.params;
+
+  userArtist
+    .findAll({
+      attributes: ["ID_USER", "ID_ARTIST"],
+      where: {
+        ID_USER: userId,
+      },
     })
     .then((result) => {
-      console.log("Success!");
-      console.log(result);
+      if (result) {
+        console.log("Making recommendations");
+        // console.log(result);
+        if (result.length > 0) {
+          const userTopArtists = [];
+          for (let i = 0; i < 5; i++) {
+            userTopArtists.push(result[i].dataValues.ID_ARTIST);
+          }
+          spotiAPI
+            .getRecommendations({
+              min_energy: 0.4,
+              seed_artists: userTopArtists,
+              min_popularity: 40,
+            })
+            .then((result) => {
+              // console.log("Success!\n", result);
+              storeRecommendedArtists(result.body.tracks);
+              res.status(200).json({
+                Message: "Success!",
+                Details: "Able to make recommendations",
+                Tracks: result.body.tracks,
+              });
+            })
+            .catch((err) => {
+              console.log("Error!", err);
+              res.status(500).json({
+                Message: "Error!",
+                Details: err,
+              });
+            });
+        } else {
+          spotiAPI
+            .getRecommendations({
+              min_energy: 0.4,
+              seed_artists: [
+                "74XFHRwlV6OrjEM0A2NCMF",
+                "3AA28KZvwAUcZuOKwyblJQ",
+                "7jy3rLJdDQY21OgRLCZ9sD",
+              ],
+              min_popularity: 40,
+            })
+            .then((result) => {
+              // console.log("Success!\n", result);
+              storeRecommendedArtists(result.body.tracks);
+              res.status(200).json({
+                Message: "Success!",
+                Details: "Able to make recommendations",
+                Tracks: result.body.tracks,
+              });
+            })
+            .catch((err) => {
+              console.log("Error!", err);
+              res.status(500).json({
+                Message: "Error!",
+                Details: err,
+              });
+            });
+        }
+      } else {
+        console.log("Error! No user artist relation");
 
-      res.status(200).json({
-        Message: "Success!",
-        Details: result,
-      });
+        res.status(404).json({
+          Message: "Error! could not make a recommendation",
+          Details: "No user artist relation",
+        });
+      }
     })
     .catch((err) => {
-      console.log("Error!");
-      console.log(err);
+      console.log("Error!", err);
 
       res.status(500).json({
         Message: "Error!",
