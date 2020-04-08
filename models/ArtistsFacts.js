@@ -4,7 +4,7 @@ const Artists = require("./Artists");
 const dateTimes = require("./DateTimes");
 
 const ArtistsFacts = conn.define(
-  "T_ARTIST_STATISTIC",
+  "T_ARTIST_FACT",
   {
     ID_ARTIST_FACT: {
       type: Sequelize.INTEGER,
@@ -14,6 +14,7 @@ const ArtistsFacts = conn.define(
     },
     ID_ARTIST: {
       type: Sequelize.STRING(100),
+      unique: true,
       references: {
         model: Artists,
         key: "ID_ARTIST",
