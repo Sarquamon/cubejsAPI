@@ -9,13 +9,13 @@ const spotiAPI = new spotifyWebAPI({
 });
 
 exports.spotifyRoot = (req, res, next) => {
-  console.log("\nHello from root spotify");
+  // console.log("\nHello from root spotify");
   res.status(200).json({ Message: "Hello from root spotify" });
   next();
 };
 
 exports.spotifyLinkGenerator = (req, res, next) => {
-  console.log("\nHello from spotify link generator");
+  // console.log("\nHello from spotify link generator");
 
   const authURL = spotiAPI.createAuthorizeURL(
     ["user-library-read", "user-top-read"],
@@ -32,7 +32,7 @@ exports.spotifyLinkGenerator = (req, res, next) => {
 };
 
 exports.spotifyTokenGenerator = (req, res, next) => {
-  console.log("\nhello from generateToken");
+  // console.log("\nhello from generateToken");
 
   const { code } = req.query;
 
@@ -49,7 +49,7 @@ exports.spotifyTokenGenerator = (req, res, next) => {
       res.redirect("http://localhost:3000/tests");
     })
     .catch((err) => {
-      console.log("Error!\n", err);
+      // console.log("Error! failed to get auth code\n" , err);
 
       res.status(500).json({
         Message: "Error!",
@@ -59,7 +59,7 @@ exports.spotifyTokenGenerator = (req, res, next) => {
 };
 
 exports.tokenRefresher = (req, res, next) => {
-  console.log("\nhello from refreshtoken");
+  // console.log("\nhello from refreshtoken");
 
   spotiAPI
     .refreshAccessToken()
@@ -79,7 +79,7 @@ exports.tokenRefresher = (req, res, next) => {
 };
 
 exports.getUserName = (req, res, next) => {
-  console.log("\nHello from getusername");
+  // console.log("\nHello from getusername");
 
   spotiAPI
     .getMe()
@@ -100,7 +100,7 @@ exports.getUserName = (req, res, next) => {
 };
 
 exports.getRecommendedGenres = (req, res, next) => {
-  console.log("\nHello from recommendedGenres");
+  // console.log("\nHello from recommendedGenres");
 
   spotiAPI
     .getAvailableGenreSeeds()
@@ -113,8 +113,7 @@ exports.getRecommendedGenres = (req, res, next) => {
       });
     })
     .catch((err) => {
-      console.log("Error!");
-      console.log(err);
+      // console.log("Error!", err);
       res.status(500).json({
         Message: "Error!",
         Details: err,
@@ -123,6 +122,7 @@ exports.getRecommendedGenres = (req, res, next) => {
 };
 
 exports.getUserTopArtists = (req, res, next) => {
+  // console.log("Hello from get user top artists");
   const { userId } = req.params;
 
   spotiAPI
@@ -154,7 +154,7 @@ exports.getUserTopArtists = (req, res, next) => {
       }
     })
     .catch((err) => {
-      console.log("Error!");
+      console.log("Error!\n", err);
       console.log(err);
       res.status(500).json({
         Message: "Error!",
@@ -187,7 +187,7 @@ exports.getRecommendations = (req, res, next) => {
             })
             .then((result) => {
               // console.log("Success!\n", result);
-              artistFunctions.saveRecommendedArtists(result.body.tracks);
+              spotifyFunctions.saveRecommendations(result.body.tracks);
               res.status(200).json({
                 Message: "Success!",
                 Details: "Able to make recommendations",
@@ -214,7 +214,7 @@ exports.getRecommendations = (req, res, next) => {
             })
             .then((result) => {
               // console.log("Success!\n", result);
-              artistFunctions.saveRecommendedArtists(result.body.tracks);
+              spotifyFunctions.saveRecommendations(result.body.tracks);
               res.status(200).json({
                 Message: "Success!",
                 Details: "Able to make recommendations",

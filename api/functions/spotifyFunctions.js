@@ -1,3 +1,4 @@
+const artistFunctions = require("./artistFunctions");
 exports.randomString = (length) => {
   var result = "";
   const characters =
@@ -7,4 +8,13 @@ exports.randomString = (length) => {
     result += characters.charAt(Math.floor(Math.random() * charactersLength));
   }
   return result;
+};
+
+exports.saveRecommendations = (tracks /* values */) => {
+  // const tracks = [values[0]];
+  // console.log("TRACKS:\n", tracks);
+
+  tracks.forEach(async (track) => {
+    await artistFunctions.saveRecommendedArtists(track.artists);
+  });
 };

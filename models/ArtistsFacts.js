@@ -1,9 +1,9 @@
 const Sequelize = require("sequelize");
 const conn = require("../config/sqlconn");
 const Artists = require("./Artists");
-const dateTimes = require("./DateTimes");
+const DateTimes = require("./DateTimes");
 
-const ArtistsFacts = conn.define(
+const ArtistFacts = conn.define(
   "T_ARTIST_FACT",
   {
     ID_ARTIST_FACT: {
@@ -22,26 +22,21 @@ const ArtistsFacts = conn.define(
     },
     TIMES_RECOMMENDED: {
       type: Sequelize.INTEGER,
-      allowNull: false,
-      defaultValue: 0,
+      allowNull: true,
     },
     LIKES: {
       type: Sequelize.INTEGER,
-      allowNull: false,
-      defaultValue: 0,
+      allowNull: true,
     },
     ID_DATETIME: {
       type: Sequelize.INTEGER,
       references: {
-        model: dateTimes,
+        model: DateTimes,
         key: "ID_DATETIME",
       },
     },
   },
-  {
-    timestamps: false,
-    freezeTableName: true,
-  }
+  { timestamps: false, freezeTableName: true }
 );
 
-module.exports = ArtistsFacts;
+module.exports = ArtistFacts;

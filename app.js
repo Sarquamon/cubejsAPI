@@ -25,10 +25,12 @@ conn
 const indexRoute = require("./api/routes/index");
 const userRoute = require("./api/routes/user");
 const spotifyRoute = require("./api/routes/spotify");
+const datetimes = require("./api/routes/datetimes");
 
 app.use("/", indexRoute);
 app.use("/user", userRoute);
 app.use("/spotify", spotifyRoute);
+app.use("/datetimes", datetimes);
 
 //Error handling
 app.use((req, res, next) => {
