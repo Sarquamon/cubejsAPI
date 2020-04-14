@@ -187,7 +187,7 @@ exports.getRecommendations = (req, res, next) => {
             })
             .then((result) => {
               // console.log("Success!\n", result);
-              spotifyFunctions.saveRecommendations(result.body.tracks);
+              spotifyFunctions.saveRecommendations(result.body.tracks, userId);
               res.status(200).json({
                 Message: "Success!",
                 Details: "Able to make recommendations",
@@ -214,7 +214,7 @@ exports.getRecommendations = (req, res, next) => {
             })
             .then((result) => {
               // console.log("Success!\n", result);
-              spotifyFunctions.saveRecommendations(result.body.tracks);
+              spotifyFunctions.saveRecommendations(result.body.tracks, userId);
               res.status(200).json({
                 Message: "Success!",
                 Details: "Able to make recommendations",
@@ -230,6 +230,7 @@ exports.getRecommendations = (req, res, next) => {
             });
         }
       } else {
+        //IF NO USER ARTIST RELATION MAKE A FALSE RECOMMENDATION BUT DONT STORE IT (TO DO)
         console.log("Error! No user artist relation");
 
         res.status(404).json({

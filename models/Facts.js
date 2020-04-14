@@ -1,30 +1,53 @@
 const Sequelize = require("sequelize");
 const conn = require("../config/sqlconn");
+const Users = require("./Users");
 const Artists = require("./Artists");
+const Songs = require("./Songs");
+const Genres = require("./Genres");
 const DateTimes = require("./DateTimes");
 
-const ArtistFacts = conn.define(
-  "T_ARTIST_FACT",
+const Facts = conn.define(
+  "T_FACTS",
   {
-    ID_ARTIST_FACT: {
+    ID_FACT: {
       type: Sequelize.INTEGER,
       primaryKey: true,
       allowNull: false,
       autoIncrement: true,
     },
+    ID_USER: {
+      type: Sequelize.INTEGER,
+      references: {
+        model: Users,
+        key: "ID_USER",
+      },
+    },
     ID_ARTIST: {
       type: Sequelize.STRING(100),
-      unique: true,
       references: {
         model: Artists,
         key: "ID_ARTIST",
       },
     },
-    TIMES_RECOMMENDED: {
+    ID_SONG: {
+      type: Sequelize.STRING(100),
+      references: {
+        model: Songs,
+        key: "ID_SONG",
+      },
+    },
+    ID_GENRE: {
+      type: Sequelize.STRING(100),
+      references: {
+        model: Genres,
+        key: "ID_GENRE",
+      },
+    },
+    RECOMMENDED: {
       type: Sequelize.INTEGER,
       allowNull: true,
     },
-    LIKES: {
+    LIKED: {
       type: Sequelize.INTEGER,
       allowNull: true,
     },
@@ -39,4 +62,4 @@ const ArtistFacts = conn.define(
   { timestamps: false, freezeTableName: true }
 );
 
-module.exports = ArtistFacts;
+module.exports = Facts;

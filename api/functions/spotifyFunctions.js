@@ -1,4 +1,4 @@
-const artistFunctions = require("./artistFunctions");
+const factsFunctions = require("./factsFunctions");
 exports.randomString = (length) => {
   var result = "";
   const characters =
@@ -10,11 +10,11 @@ exports.randomString = (length) => {
   return result;
 };
 
-exports.saveRecommendations = (tracks /* values */) => {
+exports.saveRecommendations = (tracks, userId /* values */) => {
   // const tracks = [values[0]];
   // console.log("TRACKS:\n", tracks);
 
   tracks.forEach(async (track) => {
-    await artistFunctions.saveRecommendedArtists(track.artists);
+    await factsFunctions.saveRecommendedArtists(track.artists, userId);
   });
 };

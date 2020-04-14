@@ -14,12 +14,8 @@ const DateTimes = conn.define(
       type: Sequelize.STRING(8),
       allowNull: true,
     },
-    DATE: {
-      type: Sequelize.STRING(20),
-      allowNull: true,
-    },
-    TIME: {
-      type: Sequelize.STRING(15),
+    DATETIME: {
+      type: Sequelize.STRING(19),
       allowNull: true,
     },
   },
