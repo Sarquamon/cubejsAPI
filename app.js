@@ -16,9 +16,18 @@ app.use(cookieParser());
 
 conn
   .authenticate()
-  .then(() => console.log(`Succesful db connection`))
+  .then(() => console.log(`Succesful auth`))
   .catch((err) => {
-    console.log(`Error on db connection: \n${err}`);
+    console.log("Error on db connection:", err);
+  });
+
+conn
+  .sync({ force: false })
+  .then((result) => {
+    console.log("Successful db connection");
+  })
+  .catch((err) => {
+    console.log("Error!", err);
   });
 
 //routes

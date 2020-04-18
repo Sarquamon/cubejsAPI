@@ -1,11 +1,14 @@
 const Sequelize = require("sequelize");
 
-module.exports = new Sequelize(
+const conn = new Sequelize(
   process.env.MSSQLDB,
-  process.env.MSSQLUSER,
-  process.env.MSSQLUSERPWD,
+  // process.env.MSSQLUSER,
+  // process.env.MSSQLUSERPWD,
+  process.env.AZUREADMIN,
+  process.env.AZUREADMINPWD,
   {
-    host: "localhost",
+    // host: "localhost",
+    host: process.env.AZUREHOST,
     dialect: "mssql",
 
     pool: {
@@ -14,9 +17,10 @@ module.exports = new Sequelize(
       acquire: 30000,
       idle: 10000,
     },
-
+    logging: false,
     dialectOptions: {
       options: { encrypt: true, trustServerCertificate: true },
     },
   }
 );
+module.exports = conn;
