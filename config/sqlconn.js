@@ -14,8 +14,9 @@ module.exports = new Sequelize(
       acquire: 30000,
       idle: 10000,
     },
+
     dialectOptions: {
-      trustServerCertificate: true,
+      options: { encrypt: true, trustServerCertificate: true },
     },
   }
 );

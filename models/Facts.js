@@ -36,11 +36,11 @@ const Facts = conn.define(
         key: "ID_SONG",
       },
     },
-    ID_GENRE: {
-      type: Sequelize.STRING(100),
+    GENRE_NAME: {
+      type: Sequelize.STRING(200),
       references: {
         model: Genres,
-        key: "ID_GENRE",
+        key: "GENRE_NAME",
       },
     },
     RECOMMENDED: {

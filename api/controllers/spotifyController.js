@@ -1,6 +1,8 @@
 const spotifyWebAPI = require("spotify-web-api-node");
 const spotifyFunctions = require("../functions/spotifyFunctions");
 const artistFunctions = require("../functions/artistFunctions");
+const userFunctions = require("../functions/userFunctions");
+const genreFunctions = require("../functions/genreFunctions");
 
 const spotiAPI = new spotifyWebAPI({
   clientId: process.env.SPOTIFY_CLIENT_ID,
@@ -99,28 +101,83 @@ exports.getUserName = (req, res, next) => {
     });
 };
 
-exports.getRecommendedGenres = (req, res, next) => {
-  // console.log("\nHello from recommendedGenres");
+// Genres
+exports.getRecommendedGenres = async (req, res, next) => {
+  const { userId } = req.params;
+  if (userId) {
+    const existingUser = await userFunctions.findOneUser("", "", userId);
+    if (existingUser) {
+      const userGenres = await genreFunctions.findAllUserGenre(userId);
+      if (userGenres) {
+        if (userGenres.length > 0) {
+          const userTopGenres = [];
+          if (userGenres.length < 5) {
+            for (let i = 0; i < userGenres.length; i++) {
+              userTopGenres.push(userGenres[i].dataValues.GENRE_NAME);
+            }
+          } else {
+            for (let i = 0; i < 5; i++) {
+              userTopGenres.push(userGenres[i].dataValues.GENRE_NAME);
+            }
+          }
 
-  spotiAPI
-    .getAvailableGenreSeeds()
-    .then((result) => {
-      // console.log("Success\n", result);
+          spotiAPI
+            .getRecommendations({
+              min_energy: 0.4,
+              seed_genres: userTopGenres,
+              min_popularity: 40,
+            })
+            .then((result) => {
+              // console.log("Success!\n", result);
+              spotifyFunctions.saveRecommendedArtists(
+                result.body.tracks,
+                userId
+              );
+              res.status(200).json({
+                Message: "Success!",
+                Details: "Able to make recommendations",
+                Tracks: result.body.tracks,
+              });
+            })
+            .catch((err) => {
+              console.log("Error!", err);
+              res.status(500).json({
+                Message: "Error!",
+                Details: err,
+              });
+            });
+        } else {
+          console.log("No userGenre");
 
-      res.status(200).json({
-        Message: "Success!",
-        Details: result.body.genres,
-      });
-    })
-    .catch((err) => {
-      // console.log("Error!", err);
-      res.status(500).json({
+          res.status(404).json({
+            Message: "Error!",
+            Details: "No user genres!",
+          });
+        }
+      } else {
+        console.log("Error! Null\n");
+        res.status(500).json({
+          Message: "Error!",
+          Details: "Null",
+        });
+      }
+    } else {
+      console.log("Error! No user found\n");
+      res.status(404).json({
         Message: "Error!",
-        Details: err,
+        Details: "No user found",
       });
+    }
+  } else {
+    console.log("Error! No userId provided\n");
+    res.status(404).json({
+      Message: "Error!",
+      Details: "No userId provided",
     });
+  }
 };
 
+//Artists
 exports.getUserTopArtists = (req, res, next) => {
   // console.log("Hello from get user top artists");
   const { userId } = req.params;
@@ -163,7 +220,8 @@ exports.getUserTopArtists = (req, res, next) => {
     });
 };
 
-exports.getRecommendations = (req, res, next) => {
+//CHANGE LOGIC TO IMPLEMENT RECOMMENDATIONS BASED ON GENRES IF NO ARTIST IS AVAILABLE
+exports.getRecommendedArtists = (req, res, next) => {
   // console.log("Hello from getSpotifyReco");
 
   const { userId } = req.params;
@@ -187,7 +245,10 @@ exports.getRecommendations = (req, res, next) => {
             })
             .then((result) => {
               // console.log("Success!\n", result);
-              spotifyFunctions.saveRecommendations(result.body.tracks, userId);
+              spotifyFunctions.saveRecommendedArtists(
+                result.body.tracks,
+                userId
+              );
               res.status(200).json({
                 Message: "Success!",
                 Details: "Able to make recommendations",
@@ -214,7 +275,10 @@ exports.getRecommendations = (req, res, next) => {
             })
             .then((result) => {
               // console.log("Success!\n", result);
-              spotifyFunctions.saveRecommendations(result.body.tracks, userId);
+              spotifyFunctions.saveRecommendedArtists(
+                result.body.tracks,
+                userId
+              );
               res.status(200).json({
                 Message: "Success!",
                 Details: "Able to make recommendations",

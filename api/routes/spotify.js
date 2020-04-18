@@ -12,13 +12,16 @@ router.get("/refreshToken", spotifyController.tokenRefresher);
 
 router.get("/getUserName", spotifyController.getUserName);
 
-router.get("/getRecommendedGenres", spotifyController.getRecommendedGenres);
+router.get(
+  "/getRecommendedGenres/:userId",
+  spotifyController.getRecommendedGenres
+);
 
 router.get("/getUsersTopArtists/:userId", spotifyController.getUserTopArtists);
 
 router.get(
   "/getSpotifyRecommendations/:userId",
-  spotifyController.getRecommendations
+  spotifyController.getRecommendedArtists
 );
 
 module.exports = router;

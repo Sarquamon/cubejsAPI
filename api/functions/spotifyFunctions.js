@@ -10,10 +10,7 @@ exports.randomString = (length) => {
   return result;
 };
 
-exports.saveRecommendations = (tracks, userId /* values */) => {
-  // const tracks = [values[0]];
-  // console.log("TRACKS:\n", tracks);
-
+exports.saveRecommendedArtists = (tracks, userId) => {
   tracks.forEach(async (track) => {
     await factsFunctions.saveRecommendedArtists(track.artists, userId);
   });

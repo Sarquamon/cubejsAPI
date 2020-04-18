@@ -2,12 +2,12 @@ const Facts = require("../../models/Facts");
 const artistFunctions = require("./artistFunctions");
 const dateTimesFunctions = require("../functions/dateTimesFunctions");
 
-exports.saveArtistFact = async (
+exports.saveFact = async (
   userId,
   datetimeId,
   artistId,
   songId,
-  genreId,
+  genreName,
   recommended,
   liked
 ) => {
@@ -50,10 +50,10 @@ exports.saveArtistFact = async (
         RECOMMENDED: 1,
       })
         .then((result) => {
-          console.log("Success! Created artistFact\n" /* , result */);
+          console.log("Success! Created song fact\n" /* , result */);
         })
         .catch((err) => {
-          console.log("Error! Could not create artist fact" /* , err */);
+          console.log("Error! Could not create song fact" /* , err */);
         });
     } else if (liked) {
       Facts.create({
@@ -63,40 +63,10 @@ exports.saveArtistFact = async (
         LIKED: 1,
       })
         .then((result) => {
-          console.log("Success! Created artistFact\n" /* , result */);
+          console.log("Success! Created song fact\n" /* , result */);
         })
         .catch((err) => {
-          console.log("Error! Could not create artist fact" /* , err */);
-        });
-    } else {
-      console.log("Error!\n");
-    }
-  } else if (genreId) {
-    if (recommended) {
-      Facts.create({
-        ID_USER: userId,
-        ID_DATETIME: datetimeId,
-        ID_GENRE: genreId,
-        RECOMMENDED: 1,
-      })
-        .then((result) => {
-          console.log("Success! Created artistFact\n" /* , result */);
-        })
-        .catch((err) => {
-          console.log("Error! Could not create artist fact" /* , err */);
-        });
-    } else if (liked) {
-      Facts.create({
-        ID_USER: userId,
-        ID_DATETIME: datetimeId,
-        ID_GENRE: genreId,
-        LIKED: 1,
-      })
-        .then((result) => {
-          console.log("Success! Created artistFact\n" /* , result */);
-        })
-        .catch((err) => {
-          console.log("Error! Could not create artist fact" /* , err */);
+          console.log("Error! Could not create song fact" /* , err */);
         });
     } else {
       console.log("Error!\n");
@@ -117,7 +87,7 @@ exports.saveRecommendedArtists = async (artists, userId) => {
             const id_datetime = await dateTimesFunctions.saveDateTime(
               "ARTISTS"
             );
-            await this.saveArtistFact(
+            await this.saveFact(
               userId,
               id_datetime,
               artist.id,
@@ -140,7 +110,7 @@ exports.saveRecommendedArtists = async (artists, userId) => {
             const id_datetime = await dateTimesFunctions.saveDateTime(
               "ARTISTS"
             );
-            await this.saveArtistFact(
+            await this.saveFact(
               userId,
               id_datetime,
               artist.id,
