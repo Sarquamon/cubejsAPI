@@ -2,38 +2,42 @@ const Sequelize = require("sequelize");
 const conn = require("../config/sqlconn");
 
 const User = conn.define(
-  "t_users",
+  "T_USERS",
   {
-    USER__ID: {
+    ID_USER: {
       type: Sequelize.INTEGER,
       primaryKey: true,
       allowNull: false,
-      autoIncrement: true
+      autoIncrement: true,
     },
-    USER__NAME: {
+    USERNAME: {
       type: Sequelize.STRING(100),
       unique: true,
-      allowNull: false
+      allowNull: false,
     },
-    USER__EMAIL: {
+    USEREMAIL: {
       type: Sequelize.STRING(100),
       unique: true,
-      allowNull: false
+      allowNull: false,
     },
-    USER__PWD: {
+    USERPWD: {
       type: Sequelize.STRING(200),
-      allowNull: false
+      allowNull: false,
     },
-    USER__FIRST_NAME: {
+    FIRST_NAME: {
       type: Sequelize.STRING(100),
-      allowNull: false
+      allowNull: false,
     },
-    USER__LAST_NAME: {
+    LAST_NAME: {
       type: Sequelize.STRING(100),
-      allowNull: false
-    }
+      allowNull: false,
+    },
+    CREATED_AT: {
+      type: Sequelize.STRING(19),
+      allowNull: true,
+    },
   },
-  { timestamps: false }
+  { timestamps: false, freezeTableName: true }
 );
 
 module.exports = User;

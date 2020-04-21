@@ -16,19 +16,24 @@ app.use(cookieParser());
 
 conn
   .authenticate()
-  .then(() => console.log(`Succesful db connection`))
-  .catch(err => {
-    console.log(`Error on db connection: \n${err}`);
-  });
+  .then(() => console.log(`Succesful auth`))
+  .catch((err) => console.log("Error on db connection:", err));
+
+conn
+  .sync({ force: false })
+  .then((result) => console.log("Successful db connection"))
+  .catch((err) => console.log("Error!", err));
 
 //routes
 const indexRoute = require("./api/routes/index");
 const userRoute = require("./api/routes/user");
-const spotifyRoute = require("./api/routes/spotiWrapper");
+const spotifyRoute = require("./api/routes/spotify");
+const datetimes = require("./api/routes/datetimes");
 
 app.use("/", indexRoute);
 app.use("/user", userRoute);
 app.use("/spotify", spotifyRoute);
+app.use("/datetimes", datetimes);
 
 //Error handling
 app.use((req, res, next) => {
@@ -41,8 +46,8 @@ app.use((error, req, res, next) => {
   res.status(error.status || 500);
   res.json({
     error: {
-      message: error.message
-    }
+      message: error.message,
+    },
   });
 });
 
