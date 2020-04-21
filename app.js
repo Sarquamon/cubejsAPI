@@ -17,18 +17,12 @@ app.use(cookieParser());
 conn
   .authenticate()
   .then(() => console.log(`Succesful auth`))
-  .catch((err) => {
-    console.log("Error on db connection:", err);
-  });
+  .catch((err) => console.log("Error on db connection:", err));
 
 conn
   .sync({ force: false })
-  .then((result) => {
-    console.log("Successful db connection");
-  })
-  .catch((err) => {
-    console.log("Error!", err);
-  });
+  .then((result) => console.log("Successful db connection"))
+  .catch((err) => console.log("Error!", err));
 
 //routes
 const indexRoute = require("./api/routes/index");

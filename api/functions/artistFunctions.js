@@ -7,12 +7,8 @@ exports.saveArtist = async (artistId, artistName) => {
     ID_ARTIST: artistId,
     ARTIST_NAME: artistName,
   })
-    .then((result) => {
-      console.log(`Success! Created artist`);
-    })
-    .catch((err) => {
-      console.log("Error creating artist", err);
-    });
+    .then((result) => console.log(`Success! Created artist`))
+    .catch((err) => console.log("Error creating artist", err));
 };
 
 exports.findOneArtist = async (artistId, artistName) => {
@@ -47,7 +43,7 @@ exports.saveUserTopArtists = (artistId, artistName) => {
   return this.findOneArtist(artistId, artistName)
     .then((result) => {
       if (result) {
-        console.log("\nExisting artist");
+        console.log("Existing artist\n");
       } else {
         console.log("Creating artist");
         this.saveArtist(artistId, artistName);
@@ -61,7 +57,6 @@ exports.saveUserTopArtists = (artistId, artistName) => {
 exports.saveUserArtistRelation = (userId, artistId) => {
   return this.findOneUserTopArtist(userId, artistId)
     .then((result) => {
-      //   console.log(result);
       if (result) {
         console.log("\nA relation already exists");
       } else {
@@ -71,17 +66,9 @@ exports.saveUserArtistRelation = (userId, artistId) => {
           ID_USER: userId,
           ID_ARTIST: artistId,
         })
-          .then((result) => {
-            console.log("Success! On relating user artist");
-            // console.log(result);
-          })
-          .catch((err) => {
-            console.log("Error! On relating user artist");
-            console.log(err);
-          });
+          .then((result) => console.log("Success! On relating user artist"))
+          .catch((err) => console.log("Error! On relating user artist\n", err));
       }
     })
-    .catch((err) => {
-      console.log("Error!\n", err);
-    });
+    .catch((err) => console.log("Error!\n", err));
 };

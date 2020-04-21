@@ -22,11 +22,14 @@ exports.saveRelation = (userId, genreName) => {
 };
 
 //Finds one genre from DB
-exports.findOneGenre = (genreName) => {
+exports.findOneGenre = (genreName, genreCheckbox) => {
   return Genres.findOne({
     attributes: ["GENRE_NAME"],
     where: {
-      [Op.or]: [{ GENRE_NAME: genreName }],
+      [Op.or]: [
+        { GENRE_NAME: genreName || null },
+        { GENRE_CHECKBOX: genreCheckbox || null },
+      ],
     },
   });
 };
@@ -35,11 +38,6 @@ exports.findOneGenre = (genreName) => {
 exports.findOneUserGenre = (userId, genreName) => {
   return userGenre.findOne({
     attributes: ["ID_USER", "GENRE_NAME"],
-    include: [
-      {
-        model: Genres,
-      },
-    ],
     where: {
       ID_USER: userId,
       GENRE_NAME: genreName,
@@ -63,17 +61,27 @@ exports.findAllUserGenre = (userId) => {
 
 //Saves user's favourite / liked / possible genres and relates them
 //If no existing genre, runs function to save it and then relates
-exports.saveUserGenreRelation = async (userId, genreName) => {
+exports.saveUserGenreRelation = async (userId, genreName, genreCheckbox) => {
+  console.log(userId, genreName, genreCheckbox);
+
   try {
-    const genre = await this.findOneGenre(genreName);
+    const genre = await this.findOneGenre(genreName, genreCheckbox);
+
     if (genre) {
-      const userGenre = await this.findOneUserGenre(userId, genreName);
+      const userGenre = await this.findOneUserGenre(
+        userId,
+        genreName || genre.dataValues.GENRE_NAME
+      );
+
       if (userGenre) {
         console.log("A relation already exists!\n");
       } else {
         console.log("creating relation\n");
         try {
-          await this.saveRelation(userId, genreName);
+          await this.saveRelation(
+            userId,
+            genreName || genre.dataValues.GENRE_NAME
+          );
           return true;
         } catch (err) {
           console.log("Error!", err);

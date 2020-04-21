@@ -8,6 +8,9 @@ const Genre = conn.define(
       type: Sequelize.STRING(200),
       primaryKey: true,
     },
+    GENRE_CHECKBOX: {
+      type: Sequelize.STRING(100),
+    },
     CREATED_AT: {
       type: Sequelize.STRING(19),
       allowNull: true,
