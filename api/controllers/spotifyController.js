@@ -7,7 +7,8 @@ const genreFunctions = require("../functions/genreFunctions");
 const spotiAPI = new spotifyWebAPI({
   clientId: process.env.SPOTIFY_CLIENT_ID,
   clientSecret: process.env.SPOTIFY_CLIENT_SECRET,
-  redirectUri: process.env.SPOTIFY_REDIRECT_URI,
+  // redirectUri: process.env.SPOTIFY_REDIRECT_URIDEV,
+  redirectUri: process.env.SPOTIFY_REDIRECT_URIMASTER,
 });
 
 exports.spotifyRoot = (req, res, next) => {
