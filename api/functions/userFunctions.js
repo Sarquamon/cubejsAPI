@@ -4,7 +4,7 @@ const spotifyFunctions = require("./spotifyFunctions");
 const { Op } = require("sequelize");
 const sgMail = require("@sendgrid/mail");
 
-const musictasteapidev = "http://localhost:3000/";
+const musictasteapidev = "";
 const musictasteapimaster = "https://musictasteapi.azurewebsites.net/";
 
 exports.findOneUser = (userName, userEmail, userId) => {
@@ -40,7 +40,7 @@ exports.sendPasswordRecover = async (user) => {
         ],
         dynamic_template_data: {
           name: user.USERNAME,
-          url: `${musictasteapimaster}recoverpwd?token=${token}&anduseremail=${user.USEREMAIL}`,
+          url: `http://localhost:3000/recoverpwd?token=${token}&anduseremail=${user.USEREMAIL}`,
         },
       },
     ],
