@@ -2,6 +2,7 @@ const express = require("express");
 const morgan = require("morgan");
 const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
+const sgMail = require("@sendgrid/mail");
 const CORS = require("cors");
 require("dotenv").config();
 const conn = require("./config/sqlconn");
@@ -13,6 +14,7 @@ app.use(morgan("dev"));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(cookieParser());
+sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 conn
   .authenticate()
