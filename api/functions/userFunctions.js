@@ -5,7 +5,7 @@ const { Op } = require("sequelize");
 const sgMail = require("@sendgrid/mail");
 
 const musictasteapidev = "http://localhost:3000";
-const musictasteapimaster = "https://musictastereact.herokuapp.com/";
+const musictasteapimaster = "https://musictastereact.herokuapp.com";
 
 exports.findOneUser = (userName, userEmail, userId) => {
   return User.findOne({
