@@ -4,8 +4,9 @@ const spotifyFunctions = require("./spotifyFunctions");
 const { Op } = require("sequelize");
 const sgMail = require("@sendgrid/mail");
 
-// const musictasteapidev = "http://localhost:3000/"
-const musictasteapimaster = "https://musictasteapi.azurewebsites.net/";
+
+const musictasteapidev = "http://localhost:3000";
+const musictasteapimaster = "https://musictasteapi.azurewebsites.net";
 
 exports.findOneUser = (userName, userEmail, userId) => {
   return User.findOne({
