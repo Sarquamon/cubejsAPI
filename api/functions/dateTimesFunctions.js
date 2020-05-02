@@ -9,10 +9,9 @@ exports.saveDateTime = async (msg) => {
     if (result) {
       console.log("Success! Saved datetime\n");
       return result.ID_DATETIME;
-    } else {
-      console.log("Error!\n", err);
-      return null;
     }
+    console.log("Error!\n");
+    return null;
   } catch (err) {
     console.log("Error!\n", err);
     return null;

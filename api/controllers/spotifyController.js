@@ -1,14 +1,14 @@
-const spotifyWebAPI = require("spotify-web-api-node");
+const SpotifyWebAPI = require("spotify-web-api-node");
 const spotifyFunctions = require("../functions/spotifyFunctions");
 const artistFunctions = require("../functions/artistFunctions");
 const userFunctions = require("../functions/userFunctions");
 const genreFunctions = require("../functions/genreFunctions");
 
-const spotiAPI = new spotifyWebAPI({
+const spotiAPI = new SpotifyWebAPI({
   clientId: process.env.SPOTIFY_CLIENT_ID,
   clientSecret: process.env.SPOTIFY_CLIENT_SECRET,
-  // redirectUri: process.env.SPOTIFY_REDIRECT_URIDEV,
-  redirectUri: process.env.SPOTIFY_REDIRECT_URIMASTER,
+  redirectUri: process.env.SPOTIFY_REDIRECT_URIDEV,
+  // redirectUri: process.env.SPOTIFY_REDIRECT_URIMASTER,
 });
 
 exports.spotifyRoot = (req, res, next) => {
@@ -22,7 +22,7 @@ exports.spotifyLinkGenerator = (req, res, next) => {
     spotifyFunctions.randomString(16)
   );
   if (authURL) {
-    res.status(200).json({ Message: "Link generated!", authURL: authURL });
+    res.status(200).json({ Message: "Link generated!", authURL });
   } else {
     res
       .status(500)
@@ -36,13 +36,13 @@ exports.spotifyTokenGenerator = (req, res, next) => {
   spotiAPI
     .authorizationCodeGrant(code)
     .then((result) => {
-      spotiAPI.setAccessToken(result.body["access_token"]);
-      spotiAPI.setRefreshToken(result.body["refresh_token"]);
+      spotiAPI.setAccessToken(result.body.access_token);
+      spotiAPI.setRefreshToken(result.body.refresh_token);
 
       console.log("\nredirecting...\n");
 
-      // res.redirect("http://localhost:3000/tests");
-      res.redirect("https://musictastereact.herokuapp.com/tests");
+      res.redirect("http://localhost:3000/linkSpotify");
+      // res.redirect("https://musictastereact.herokuapp.com/tests");
     })
     .catch((err) => {
       res.status(500).json({
@@ -56,7 +56,7 @@ exports.tokenRefresher = (req, res, next) => {
   spotiAPI
     .refreshAccessToken()
     .then((result) => {
-      spotiAPI.setAccessToken(result.body["access_token"]);
+      spotiAPI.setAccessToken(result.body.access_token);
     })
     .catch((err) => {
       console.log("Unable to refresh token!", err);
@@ -160,7 +160,7 @@ exports.getRecommendedGenres = async (req, res, next) => {
   }
 };
 
-//Artists
+// Artists
 exports.getUserTopArtists = (req, res, next) => {
   const { userId } = req.params;
 
@@ -211,7 +211,7 @@ exports.getGenres = async (req, res, next) => {
   }
 };
 
-//CHANGE LOGIC TO IMPLEMENT RECOMMENDATIONS BASED ON GENRES IF NO ARTIST IS AVAILABLE
+// CHANGE LOGIC TO IMPLEMENT RECOMMENDATIONS BASED ON GENRES IF NO ARTIST IS AVAILABLE
 exports.getRecommendedArtists = async (req, res, next) => {
   const { userId } = req.params;
   if (userId) {
@@ -255,7 +255,7 @@ exports.getRecommendedArtists = async (req, res, next) => {
               });
             });
         } else {
-          //RECOMMEND BASED ON GENRES
+          // RECOMMEND BASED ON GENRES
           console.log("No user artists");
 
           const userGenres = await genreFunctions.findAllUserGenre(userId);

@@ -1,6 +1,6 @@
 const Facts = require("../../models/Facts");
 const artistFunctions = require("./artistFunctions");
-const dateTimesFunctions = require("../functions/dateTimesFunctions");
+const dateTimesFunctions = require("./dateTimesFunctions");
 
 exports.saveFact = async (
   userId,
@@ -66,12 +66,10 @@ exports.saveRecommendedArtists = async (artists, userId) => {
       .then(async (result) => {
         if (result) {
           try {
-            const id_datetime = await dateTimesFunctions.saveDateTime(
-              "ARTISTS"
-            );
+            const idDatetime = await dateTimesFunctions.saveDateTime("ARTISTS");
             await this.saveFact(
               userId,
-              id_datetime,
+              idDatetime,
               artist.id,
               null,
               null,
@@ -88,12 +86,10 @@ exports.saveRecommendedArtists = async (artists, userId) => {
               "No existing artist. Creating artist for recommendations\n"
             );
             await artistFunctions.saveArtist(artist.id, artist.name);
-            const id_datetime = await dateTimesFunctions.saveDateTime(
-              "ARTISTS"
-            );
+            const idDatetime = await dateTimesFunctions.saveDateTime("ARTISTS");
             await this.saveFact(
               userId,
-              id_datetime,
+              idDatetime,
               artist.id,
               null,
               null,
