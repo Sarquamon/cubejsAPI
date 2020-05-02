@@ -1,8 +1,8 @@
+const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
 const User = require("../../models/Users");
 const UserFunctions = require("../functions/userFunctions");
 const genreFunctions = require("../functions/genreFunctions");
-const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
 
 exports.userRoot = (req, res, next) => {
   res.send("H1 from user Root");
@@ -32,25 +32,23 @@ exports.userLogin = (req, res, next) => {
                 ID_USER: result.ID_USER,
                 USERNAME: result.USERNAME,
                 USEREMAIL: result.USEREMAIL,
-                token: token,
+                token,
               };
               return res.status(200).json({
                 Message: "Success!",
                 Details: `Logged in as ${loginUsernameEmail}`,
                 Data: data,
               });
-            } else {
-              return res
-                .status(401)
-                .json({ Message: "Error!", Details: "Auth Failed" });
             }
-          } else {
-            console.log("Error 3!\n", err);
-
             return res
               .status(401)
-              .json({ Message: "Error 3!", Details: "Auth Failed" });
+              .json({ Message: "Error!", Details: "Auth Failed" });
           }
+          console.log("Error 3!\n", err);
+
+          return res
+            .status(401)
+            .json({ Message: "Error 3!", Details: "Auth Failed" });
         });
       } else {
         // console.log(`Error! User ${loginUsernameEmail} was not found`);
@@ -108,9 +106,9 @@ exports.userRegister = (req, res, next) => {
                   );
                 });
               })
-              .catch((err) => {
-                console.log("Error 5!\n", err);
-                res.status(500).json({ Message: "Error 5!", Error: err });
+              .catch((error) => {
+                console.log("Error 5!\n", error);
+                res.status(500).json({ Message: "Error 5!", Error: error });
               });
           } else {
             console.log("Error! Failed hashing\n", err);

@@ -9,7 +9,7 @@ const conn = require("./config/sqlconn");
 
 const app = express();
 
-app.use(CORS()); //CORS
+app.use(CORS()); // CORS
 app.use(morgan("dev"));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
@@ -26,7 +26,7 @@ conn
   .then((result) => console.log("Successful db connection"))
   .catch((err) => console.log("Error!", err));
 
-//routes
+// routes
 const indexRoute = require("./api/routes/index");
 const userRoute = require("./api/routes/user");
 const spotifyRoute = require("./api/routes/spotify");
@@ -37,7 +37,7 @@ app.use("/user", userRoute);
 app.use("/spotify", spotifyRoute);
 app.use("/datetimes", datetimes);
 
-//Error handling
+// Error handling
 app.use((req, res, next) => {
   const error = new Error("Route not found");
   error.status = 404;

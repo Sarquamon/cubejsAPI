@@ -1,6 +1,6 @@
+const { Op } = require("sequelize");
 const Artist = require("../../models/Artists");
 const UserArtist = require("../../models/UserArtistRelations");
-const { Op } = require("sequelize");
 
 exports.saveArtist = async (artistId, artistName) => {
   return Artist.create({
@@ -66,7 +66,7 @@ exports.saveUserArtistRelation = (userId, artistId) => {
           ID_USER: userId,
           ID_ARTIST: artistId,
         })
-          .then((result) => console.log("Success! On relating user artist"))
+          .then((data) => console.log("Success! On relating user artist"))
           .catch((err) => console.log("Error! On relating user artist\n", err));
       }
     })

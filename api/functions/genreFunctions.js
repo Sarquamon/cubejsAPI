@@ -1,27 +1,27 @@
-const Genres = require("../../models/Genres");
-const userGenre = require("../../models/UserGenreRelations");
-const Users = require("../../models/Users");
 const { Op } = require("sequelize");
+const Genres = require("../../models/Genres");
+const userGenres = require("../../models/UserGenreRelations");
+const Users = require("../../models/Users");
 
-userGenre.belongsTo(Genres, { foreingKey: "ID_GENRE" });
-userGenre.belongsTo(Users, { foreingKey: "ID_USER" });
+userGenres.belongsTo(Genres, { foreingKey: "ID_GENRE" });
+userGenres.belongsTo(Users, { foreingKey: "ID_USER" });
 
-//Saves genre to DB
+// Saves genre to DB
 exports.saveGenre = (genreName) => {
   return Genres.create({
     GENRE_NAME: genreName,
   });
 };
 
-//Saves user genre relation
+// Saves user genre relation
 exports.saveRelation = (userId, genreName) => {
-  return userGenre.create({
+  return userGenres.create({
     ID_USER: userId,
     GENRE_NAME: genreName,
   });
 };
 
-//Finds one genre from DB
+// Finds one genre from DB
 exports.findOneGenre = (genreName, genreCheckbox) => {
   return Genres.findOne({
     attributes: ["GENRE_NAME"],
@@ -36,7 +36,7 @@ exports.findOneGenre = (genreName, genreCheckbox) => {
 
 // Finds one user's genre relation from DB
 exports.findOneUserGenre = (userId, genreName) => {
-  return userGenre.findOne({
+  return userGenres.findOne({
     attributes: ["ID_USER", "GENRE_NAME"],
     where: {
       ID_USER: userId,
@@ -51,7 +51,7 @@ exports.findOneUserGenre = (userId, genreName) => {
  * @returns {promise}      All genres related to a user
  */
 exports.findAllUserGenre = (userId) => {
-  return userGenre.findAll({
+  return userGenres.findAll({
     attributes: ["ID_USER", "GENRE_NAME"],
     where: {
       ID_USER: userId,
@@ -59,8 +59,9 @@ exports.findAllUserGenre = (userId) => {
   });
 };
 
-//Saves user's favourite / liked / possible genres and relates them
-//If no existing genre, runs function to save it and then relates
+// Saves user's favourite / liked / possible genres and relates them
+// If no existing genre, runs function to save it and then relates
+// eslint-disable-next-line consistent-return
 exports.saveUserGenreRelation = async (userId, genreName, genreCheckbox) => {
   console.log(userId, genreName, genreCheckbox);
 

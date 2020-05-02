@@ -1,10 +1,10 @@
-const User = require("../../models/Users");
 const jwt = require("jsonwebtoken");
-const spotifyFunctions = require("./spotifyFunctions");
 const { Op } = require("sequelize");
 const sgMail = require("@sendgrid/mail");
+const spotifyFunctions = require("./spotifyFunctions");
+const User = require("../../models/Users");
 
-const musictasteapidev = "http://localhost:3000";
+// const musictasteapidev = "http://localhost:3000";
 const musictasteapimaster = "https://musictastereact.herokuapp.com";
 
 exports.findOneUser = (userName, userEmail, userId) => {
