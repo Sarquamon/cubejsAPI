@@ -39,10 +39,8 @@ exports.spotifyTokenGenerator = (req, res, next) => {
       spotiAPI.setAccessToken(result.body.access_token);
       spotiAPI.setRefreshToken(result.body.refresh_token);
 
-      console.log("\nredirecting...\n");
-
-      res.redirect("http://localhost:3000/linkSpotify");
-      // res.redirect("https://musictastereact.herokuapp.com/tests");
+      // res.redirect("http://localhost:3000/user/dashboard");
+      res.redirect("https://musictastereact.herokuapp.com/user/dashboard");
     })
     .catch((err) => {
       res.status(500).json({
