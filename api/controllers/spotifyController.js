@@ -7,8 +7,8 @@ const genreFunctions = require("../functions/genreFunctions");
 const spotiAPI = new SpotifyWebAPI({
   clientId: process.env.SPOTIFY_CLIENT_ID,
   clientSecret: process.env.SPOTIFY_CLIENT_SECRET,
-  redirectUri: process.env.SPOTIFY_REDIRECT_URIDEV,
-  // redirectUri: process.env.SPOTIFY_REDIRECT_URIMASTER,
+  // redirectUri: process.env.SPOTIFY_REDIRECT_URIDEV,
+  redirectUri: process.env.SPOTIFY_REDIRECT_URIMASTER,
 });
 
 exports.spotifyRoot = (req, res, next) => {
@@ -39,8 +39,8 @@ exports.spotifyTokenGenerator = (req, res, next) => {
       spotiAPI.setAccessToken(result.body.access_token);
       spotiAPI.setRefreshToken(result.body.refresh_token);
 
-      res.redirect("http://localhost:3000/user/dashboard");
-      // res.redirect("https://musictastereact.herokuapp.com/user/dashboard");
+      // res.redirect("http://localhost:3000/user/dashboard");
+      res.redirect("https://musictastereact.herokuapp.com/user/dashboard");
     })
     .catch((err) => {
       res.status(500).json({
