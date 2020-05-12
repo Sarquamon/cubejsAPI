@@ -38,6 +38,7 @@ exports.sendPasswordRecover = async (user) => {
             email: user.USEREMAIL,
           },
         ],
+        subject: "A request to change your password",
         dynamic_template_data: {
           name: user.USERNAME,
           url: `${musictasteapimaster}/recoverpwd?token=${token}&anduseremail=${user.USEREMAIL}`,
@@ -66,6 +67,7 @@ exports.sendPasswordChange = async (userEmail) => {
             email: userEmail,
           },
         ],
+        subject: "Password has changed",
         dynamic_template_data: {
           name: userEmail,
         },

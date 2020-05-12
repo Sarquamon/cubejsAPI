@@ -51,7 +51,6 @@ exports.userLogin = (req, res, next) => {
             .json({ Message: "Error 3!", Details: "Auth Failed" });
         });
       } else {
-        // console.log(`Error! User ${loginUsernameEmail} was not found`);
         res.status(404).json({
           Message: "Error!",
           Details: `User ${loginUsernameEmail} not found`,
