@@ -72,7 +72,6 @@ exports.saveRecommendedArtists = async (artists, userId) => {
               idDatetime,
               artist.id,
               null,
-              null,
               true,
               null
             );
@@ -91,7 +90,6 @@ exports.saveRecommendedArtists = async (artists, userId) => {
               userId,
               idDatetime,
               artist.id,
-              null,
               null,
               true,
               null
