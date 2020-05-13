@@ -15,27 +15,27 @@ const DateTimes = conn.define(
       allowNull: true,
     },
     DAY: {
-      type: Sequelize.STRING,
+      type: Sequelize.STRING(2),
       allowNull: true,
     },
     MONTH: {
-      type: Sequelize.STRING,
+      type: Sequelize.STRING(2),
       allowNull: true,
     },
     YEAR: {
-      type: Sequelize.STRING,
+      type: Sequelize.STRING(10),
       allowNull: true,
     },
     HOUR: {
-      type: Sequelize.STRING,
+      type: Sequelize.STRING(4),
       allowNull: true,
     },
     MINUTE: {
-      type: Sequelize.STRING,
+      type: Sequelize.STRING(4),
       allowNull: true,
     },
     SECOND: {
-      type: Sequelize.STRING,
+      type: Sequelize.STRING(4),
       allowNull: true,
     },
     DATETIME: {
