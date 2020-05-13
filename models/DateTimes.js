@@ -14,30 +14,6 @@ const DateTimes = conn.define(
       type: Sequelize.STRING(8),
       allowNull: true,
     },
-    DAY: {
-      type: Sequelize.STRING(2),
-      allowNull: true,
-    },
-    MONTH: {
-      type: Sequelize.STRING(2),
-      allowNull: true,
-    },
-    YEAR: {
-      type: Sequelize.STRING(10),
-      allowNull: true,
-    },
-    HOUR: {
-      type: Sequelize.STRING(4),
-      allowNull: true,
-    },
-    MINUTE: {
-      type: Sequelize.STRING(4),
-      allowNull: true,
-    },
-    SECOND: {
-      type: Sequelize.STRING(4),
-      allowNull: true,
-    },
     DATETIME: {
       type: Sequelize.STRING(19),
       allowNull: true,
